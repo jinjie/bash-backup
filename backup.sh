@@ -37,6 +37,9 @@ backup_path="/tmp"
 # Script log file
 log_file="/var/log/backup.log"
 
+# How many days to retain
+retain_days="30"
+
 # Files to backup (Multi value)
 backup_files_enable="no"
 backup_files="/root/.bash_history /etc/passwd"
@@ -435,6 +438,9 @@ then
         echo "$date_now Uploading to MEGA.nz failed. Install 'megatools' from http://megatools.megous.com" >> $log_file
     fi
 fi
+
+# Remove old directories 
+find $backup_path -mindepth 1 -maxdepth 1 -type d -ctime +$retain_days -exec rm -rf {} \;
 
 # Send a simple email notification
 if [ $send_email = "yes" ]
